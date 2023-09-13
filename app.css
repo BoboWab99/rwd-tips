@@ -1,0 +1,252 @@
+/* some resets */
+*,
+::before,
+::after {
+   /* always have this line. very important! */
+   box-sizing: border-box;
+}
+
+body {
+   margin: 0;
+   background-color: lightblue;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+   margin-top: 0;
+}
+
+/* we're taking the mobile first approach in this example */
+
+/* 
+POINTER 1
+----------------------------------------------------------
+use a container/wrapper class to achieve consistent spacing 
+from left and right of the screen on all sections
+Note: stick to one name for the container
+*/
+
+.wrapper,
+.container {
+   width: 100%;
+   display: block;
+   padding-inline: 1.25rem;
+}
+
+@media (min-width: 600px) {
+
+   .wrapper,
+   .container {
+      max-width: 550px;
+      padding-inline: 0;
+      margin-inline: auto;
+   }
+}
+
+@media (min-width: 900px) {
+
+   .wrapper,
+   .container {
+      max-width: 800px;
+   }
+}
+
+@media (min-width: 1200px) {
+
+   .wrapper,
+   .container {
+      max-width: 1150px;
+   }
+}
+
+
+/* card grid */
+
+.card {
+   background-color: green;
+   min-height: 100px;
+   /* because the cards have no content - we are forcing a height so that we can see them */
+}
+
+/* ***************************************************** */
+/* 
+POINTER 2
+----------------------------------------------------------
+making a grid layout using css flex
+calculate the width of the children minus the spacing
+*/
+
+.grid-1 {
+   display: flex;
+   /* allows flex elements to move to next line if there's no enough space to fit */
+   flex-wrap: wrap;
+   /* space between the elements */
+   gap: .5rem;
+}
+
+.grid-1 .card {
+   /* one card covers full space */
+   flex-basis: 100%;
+}
+
+@media (min-width: 600px) {
+   .grid-1 .card {
+      /* two cards side-by-side minus [0.5rem] spacing between them */
+      flex-basis: calc((100% - .5rem) / 2);
+   }
+}
+
+@media (min-width: 900px) {
+   .grid-1 .card {
+      /* three cards side-by-side minus [2 * 0.5rem] spacing between them */
+      flex-basis: calc((100% - 1rem) / 3);
+   }
+}
+
+@media (min-width: 1200px) {
+   .grid-1 .card {
+      /* four cards side-by-side minus [3 * 0.5rem] spacing between them */
+      flex-basis: calc((100% - 1.5rem) / 4);
+   }
+}
+
+/* 
+Conclusion from the flex approach: 
+- requires some calculations but is perfectly responsive
+- tip: use variables for the gap & number of columns to avoid calculating over & over again
+*/
+
+
+/* ***************************************************** */
+/*
+POINTER 3
+---------------------------------------------------------- 
+making a grid layout using css grid - no calculations needed
+1fr = 1 fraction 
+*/
+
+.grid-2 {
+   display: grid;
+   /* each card covers full space */
+   grid-template-columns: 100%;
+   gap: .5rem;
+}
+
+@media (min-width: 600px) {
+   .grid-2 {
+      /* two cards side-by-side */
+      grid-template-columns: repeat(2, 1fr);
+   }
+}
+
+@media (min-width: 900px) {
+   .grid-2 {
+      /* three cards side-by-side */
+      grid-template-columns: repeat(3, 1fr);
+   }
+}
+
+@media (min-width: 1200px) {
+   .grid-2 {
+      /* four cards side-by-side */
+      grid-template-columns: repeat(4, 1fr);
+   }
+}
+
+/* 
+Conclusion from the css grid approach: 
+- no calculations and is perfectly responsive
+*/
+
+/* 
+Overall: choosing one or the other approach depends on the case
+Once you experiment with both, you'll learn what works when and where!
+*/
+
+
+/* ***************************************************** */
+/*
+POINTER 4
+---------------------------------------------------------- 
+find your way of clarifying the separation between sections
+... Guides the eye of the viewer!
+using color in this case.
+*/
+
+.section {
+   padding-block: 4rem;
+   background-color: var(--bg, lightblue);
+   /* default to lightblue if the variable --bg is not provided */
+}
+
+.section.courses {
+   --bg: #fff;
+}
+
+
+/* BONUS */
+/* 
+1. equal colums with css flex without calculations
+*/
+
+.grid-3 {
+   display: flex;
+   flex-direction: column;
+   gap: .5rem;
+}
+
+@media (min-width: 900px) {
+   .grid-3 {
+      flex-direction: row;
+      gap: 2rem;
+   }
+
+   .grid-3 .col {
+      flex: 1 1 0;
+      /* flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: 0; */
+   }
+
+   .grid-3 .card {
+      height: 100%;
+   }
+}
+
+/* 2. fixing the grid layout with css flex approach with a formula */
+/* cols = number of columns, spacer = gap between cards */
+/* RECOMMENDED if you're taking the flex approach */
+
+.grid-1 {
+   --cols: 1;
+   --spacer: .5rem;
+   display: flex;
+   flex-wrap: wrap;
+   gap: var(--spacer);
+}
+
+.grid-1 .card {
+   flex-basis: calc((100% - (var(--spacer) * (var(--cols) - 1))) / var(--cols));
+}
+
+@media (min-width: 600px) {
+   .grid-1 {
+      --cols: 2;
+   }
+}
+
+@media (min-width: 900px) {
+   .grid-1 {
+      --cols: 3;
+   }
+}
+
+@media (min-width: 1200px) {
+   .grid-1 {
+      --cols: 4;
+   }
+}
